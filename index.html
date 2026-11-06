@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10141a">
   <meta name="description" content="Convierte Bitcoin, Ethereum, Solana y otras criptomonedas a pesos dominicanos con el conversor de Fabio.">
+  <meta property="og:title" content="Conversor Crypto de Fabio">
+  <meta property="og:description" content="Convierte Bitcoin, Ethereum, Solana y más a pesos dominicanos al instante">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://iamfabio21.github.io/bitcoincontadorr">
+  <meta property="og:image" content="https://iamfabio21.github.io/bitcoincontadorr/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Conversor Crypto de Fabio">
+  <meta name="twitter:description" content="Convierte Bitcoin, Ethereum, Solana y más a pesos dominicanos al instante">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <title>Conversor Crypto de Fabio</title>
   <style>
     :root {
@@ -382,6 +391,7 @@
 
     .result-value {
       display: block;
+      min-width: 0;
       margin-top: 8px;
       overflow-wrap: anywhere;
       color: #f0f5f2;
@@ -391,6 +401,39 @@
       font-weight: 600;
       letter-spacing: -.065em;
       line-height: 1.18;
+    }
+
+    .result-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .copy-button {
+      flex: 0 0 auto;
+      padding: 8px 11px;
+      border: 1px solid rgba(0, 227, 194, .24);
+      border-radius: 8px;
+      color: #a7e9de;
+      background: rgba(0, 227, 194, .06);
+      cursor: pointer;
+      font-size: .7rem;
+      font-weight: 650;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+
+    .copy-button:hover {
+      border-color: rgba(0, 227, 194, .48);
+      color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .copy-status {
+      min-height: 16px;
+      margin: 4px 0 0;
+      color: var(--teal);
+      font-size: .7rem;
     }
 
     .result-subline {
@@ -699,6 +742,8 @@
       .crypto-select { padding-right: 26px; padding-left: 10px; font-size: .78rem; }
       .swap-row { min-height: 62px; }
       .result-panel { padding: 16px; }
+      .result-actions { align-items: flex-start; }
+      .copy-button { margin-top: 10px; }
       .price-footer { align-items: flex-start; }
       .price-info { max-width: 100%; }
       .refresh-button { margin-left: auto; }
@@ -728,6 +773,243 @@
         transition-duration: .01ms !important;
       }
     }
+
+    :root {
+      --bg: #0a0a0a;
+      --panel: #111111;
+      --panel-raised: #171411;
+      --panel-hover: #241d12;
+      --line: rgba(255, 215, 0, .24);
+      --text: #f5f5f5;
+      --muted: #b7b2a7;
+      --teal: #ffd700;
+      --teal-soft: rgba(255, 215, 0, .12);
+      --pink: #f7931a;
+      --pink-soft: rgba(247, 147, 26, .12);
+      --warning: #f7bd63;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 50% -18%, rgba(247, 147, 26, .1), transparent 40rem),
+        radial-gradient(ellipse at 100% 48%, rgba(255, 215, 0, .045), transparent 30rem),
+        var(--bg);
+    }
+
+    .topbar { border-bottom-color: rgba(255, 215, 0, .18); }
+
+    .brand-mark {
+      border-color: rgba(247, 147, 26, .45);
+      color: #ffd700;
+      background: rgba(247, 147, 26, .1);
+      box-shadow: 0 0 20px rgba(247, 147, 26, .08);
+    }
+
+    .live-badge {
+      border-color: rgba(255, 215, 0, .24);
+      color: #f5d875;
+      background: rgba(255, 215, 0, .055);
+    }
+
+    .live-dot {
+      background: #ffd700;
+      box-shadow: 0 0 12px rgba(255, 215, 0, .7);
+    }
+
+    .eyebrow { color: #ffd700; }
+
+    h1 {
+      color: transparent;
+      background: linear-gradient(110deg, #ffd700 15%, #f7931a 92%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      font-weight: 800;
+      letter-spacing: -.06em;
+    }
+
+    .typing-word {
+      color: transparent;
+      background: linear-gradient(110deg, #ffd700 15%, #f7931a 92%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      text-shadow: 0 0 35px rgba(247, 147, 26, .16);
+    }
+
+    .typing-word::after { background: #f7931a; }
+
+    .hero-copy,
+    .card-heading p,
+    .chart-heading p,
+    .section-heading p,
+    .result-subline,
+    .price-info,
+    .status-message,
+    .chart-status,
+    .chart-stat-label,
+    .history-details,
+    .footnote { color: #aaa69d; }
+
+    .meta-chip {
+      border-color: rgba(255, 215, 0, .16);
+      color: #d3c9ae;
+      background: rgba(17, 17, 17, .8);
+    }
+
+    .meta-chip strong { color: #ffd700; }
+
+    .converter-card,
+    .chart-section {
+      border-color: rgba(255, 215, 0, .22);
+      background: linear-gradient(145deg, rgba(20, 19, 16, .98), rgba(17, 17, 17, .98));
+      box-shadow:
+        0 24px 80px rgba(0, 0, 0, .42),
+        0 0 28px rgba(247, 147, 26, .045),
+        0 1px 0 rgba(255, 215, 0, .06) inset;
+    }
+
+    .converter-card::before {
+      background: linear-gradient(90deg, transparent, rgba(247, 147, 26, .72), transparent);
+    }
+
+    .card-heading h2,
+    .chart-heading h2,
+    .section-heading h2 {
+      color: #f5f0e5;
+      font-weight: 750;
+    }
+
+    .direction-label {
+      border-color: rgba(247, 147, 26, .32);
+      color: #ffc15c;
+      background: rgba(247, 147, 26, .1);
+    }
+
+    .field-label { color: #d7d0c1; }
+
+    .amount-input,
+    .crypto-select {
+      border-color: rgba(255, 215, 0, .18);
+      color: #f5f5f5;
+      background: #0d0d0d;
+    }
+
+    .amount-input:focus,
+    .crypto-select:focus {
+      border-color: rgba(255, 215, 0, .76);
+      background: #14120d;
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, .1);
+    }
+
+    .quick-label { color: #a9a092; }
+
+    .quick-button {
+      border-color: rgba(255, 215, 0, .22);
+      color: #ded6c4;
+      background: rgba(255, 215, 0, .035);
+    }
+
+    .quick-button:hover {
+      border-color: rgba(247, 147, 26, .7);
+      color: #0a0a0a;
+      background: #f7931a;
+    }
+
+    .swap-row::before { background: rgba(255, 215, 0, .16); }
+
+    .swap-button {
+      border-color: #f7931a;
+      color: #0a0a0a;
+      background: linear-gradient(135deg, #ffd700, #f7931a);
+      box-shadow: 0 0 18px rgba(247, 147, 26, .15);
+    }
+
+    .swap-button:hover {
+      background: #ffb52e;
+      box-shadow: 0 0 24px rgba(247, 147, 26, .3);
+    }
+
+    .result-panel {
+      border-color: rgba(255, 215, 0, .28);
+      background: linear-gradient(135deg, rgba(255, 215, 0, .085), rgba(247, 147, 26, .025));
+      box-shadow: 0 0 24px rgba(255, 215, 0, .035) inset;
+    }
+
+    .result-caption { color: #c9c1b0; }
+    .result-caption span:last-child { color: #ffd700; }
+
+    .result-value {
+      color: #ffd700;
+      text-shadow: 0 0 24px rgba(255, 215, 0, .13);
+    }
+
+    .copy-button,
+    .refresh-button {
+      border-color: #f7931a;
+      color: #0a0a0a;
+      background: linear-gradient(115deg, #ffd700, #f7931a);
+      box-shadow: 0 3px 14px rgba(247, 147, 26, .13);
+    }
+
+    .copy-button:hover,
+    .refresh-button:hover:not(:disabled) {
+      border-color: #ffe75a;
+      color: #000;
+      background: linear-gradient(115deg, #ffe75a, #ffad32);
+      box-shadow: 0 0 20px rgba(255, 215, 0, .3);
+    }
+
+    .copy-status { color: #ffd700; }
+    .price-info strong { color: #f5f0e5; }
+    .price-divider { color: rgba(255, 215, 0, .42); }
+    .status-message.is-warning { color: #f7bd63; }
+    .status-message.is-error { color: #ff8585; }
+
+    .chart-section { border-radius: 18px; }
+
+    .chart-range-button {
+      border-color: rgba(255, 215, 0, .2);
+      color: #c8c0af;
+      background: rgba(255, 215, 0, .025);
+    }
+
+    .chart-range-button:hover,
+    .chart-range-button.is-active {
+      border-color: #f7931a;
+      color: #0a0a0a;
+      background: linear-gradient(115deg, #ffd700, #f7931a);
+      box-shadow: 0 0 14px rgba(247, 147, 26, .18);
+    }
+
+    .chart-range-button:focus-visible,
+    button:focus-visible,
+    a:focus-visible { outline-color: #ffd700; }
+
+    .chart-canvas-wrap canvas { filter: hue-rotate(235deg) saturate(1.25); }
+
+    .chart-stat,
+    .history-item {
+      border-color: rgba(255, 215, 0, .14);
+      background: rgba(255, 215, 0, .025);
+    }
+
+    .chart-stat-value { color: #f0e8d6; }
+    .chart-stat-value.is-positive { color: #ffd700; }
+    .chart-stat-value.is-negative { color: #ff8585; }
+    .history-count { color: #b8ac91; }
+    .history-conversion { color: #f0e8d6; }
+    .history-arrow { color: #f7931a; }
+    .history-value { color: #ffd700; }
+
+    .empty-history {
+      border-color: rgba(255, 215, 0, .2);
+      color: #aaa69d;
+      background: rgba(255, 215, 0, .02);
+    }
+
+    .footnote a {
+      color: #e6c45c;
+      text-decoration-color: rgba(255, 215, 0, .42);
+    }
   </style>
 </head>
 <body>
@@ -748,7 +1030,7 @@
       <h1 id="page-title">Conversor Crypto<br>de Fabio <span class="typing-word" id="typing-word" aria-label="Bitcoin">Bitcoin</span></h1>
       <p class="hero-copy">Convierte tus criptos a pesos dominicanos al instante.</p>
       <div class="hero-meta" aria-label="Mercados disponibles">
-        <span class="meta-chip"><strong>06</strong> criptomonedas</span>
+        <span class="meta-chip"><strong>10</strong> criptomonedas</span>
         <span class="meta-chip">USD <strong>→</strong> DOP</span>
         <span class="meta-chip">RD$ peso dominicano</span>
       </div>
@@ -783,6 +1065,10 @@
           <option value="solana">◎ Solana (SOL)</option>
           <option value="dogecoin">Ð Dogecoin (DOGE)</option>
           <option value="ripple">✕ XRP (XRP)</option>
+          <option value="binancecoin">◆ BNB (BNB)</option>
+          <option value="usd-coin">＄ USD Coin (USDC)</option>
+          <option value="cardano">₳ Cardano (ADA)</option>
+          <option value="tron">⚡ Tron (TRX)</option>
         </select>
       </div>
 
@@ -806,7 +1092,11 @@
           <span id="result-caption">Recibirás aproximadamente</span>
           <span id="result-unit">DOP</span>
         </div>
-        <output class="result-value" id="result-value" for="amount-input">RD$ —</output>
+        <div class="result-actions">
+          <output class="result-value" id="result-value" for="amount-input">RD$ —</output>
+          <button class="copy-button" id="copy-result" type="button">Copiar resultado</button>
+        </div>
+        <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
         <p class="result-subline" id="result-subline">Cargando precios de mercado…</p>
       </div>
 
@@ -816,6 +1106,7 @@
           <strong id="unit-price">RD$ —</strong>
           <span class="price-divider" aria-hidden="true">·</span>
           <span>Actualizado <time id="updated-at">—</time></span>
+          <span id="elapsed-update">Actualizado hace —</span>
         </div>
         <button class="refresh-button" id="refresh-button" type="button">
           <span class="refresh-icon" aria-hidden="true">↻</span>
@@ -883,18 +1174,23 @@
 
     // Configuración de monedas, identificadores y tasas de respaldo aproximadas.
     const criptomonedas = {
-      bitcoin: { ticker: "BTC", nombre: "Bitcoin", precioUsdRespaldo: 68000 },
-      ethereum: { ticker: "ETH", nombre: "Ethereum", precioUsdRespaldo: 3500 },
-      tether: { ticker: "USDT", nombre: "Tether", precioUsdRespaldo: 1 },
-      solana: { ticker: "SOL", nombre: "Solana", precioUsdRespaldo: 150 },
-      dogecoin: { ticker: "DOGE", nombre: "Dogecoin", precioUsdRespaldo: 0.16 },
-      ripple: { ticker: "XRP", nombre: "XRP", precioUsdRespaldo: 0.52 }
+      bitcoin: { ticker: "BTC", nombre: "Bitcoin", precioUsdRespaldo: 75655 },
+      ethereum: { ticker: "ETH", nombre: "Ethereum", precioUsdRespaldo: 2231.39 },
+      tether: { ticker: "USDT", nombre: "Tether", precioUsdRespaldo: 0.999 },
+      solana: { ticker: "SOL", nombre: "Solana", precioUsdRespaldo: 89.35 },
+      dogecoin: { ticker: "DOGE", nombre: "Dogecoin", precioUsdRespaldo: 0.0717 },
+      ripple: { ticker: "XRP", nombre: "XRP", precioUsdRespaldo: 1.2 },
+      binancecoin: { ticker: "BNB", nombre: "BNB (Binance Coin)", precioUsdRespaldo: 692.11 },
+      "usd-coin": { ticker: "USDC", nombre: "USD Coin", precioUsdRespaldo: 0.9994 },
+      cardano: { ticker: "ADA", nombre: "Cardano", precioUsdRespaldo: 0.1842 },
+      tron: { ticker: "TRX", nombre: "Tron", precioUsdRespaldo: 0.3183 }
     };
 
     const CLAVE_HISTORIAL = "fabio-conversor-crypto-historial-v1";
     const MAX_HISTORIAL = 5;
-    const TASA_DOP_RESPALDO = 59;
-    const API_CRYPTO = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,solana,dogecoin,ripple&vs_currencies=usd";
+    const INTERVALO_ACTUALIZACION = 60000;
+    const TASA_DOP_RESPALDO = 60.39;
+    const API_CRYPTO = `https://api.coingecko.com/api/v3/simple/price?ids=${Object.keys(criptomonedas).join(",")}&vs_currencies=usd`;
     const API_CAMBIO = "https://open.er-api.com/v6/latest/USD";
     const formateadorNumero = new Intl.NumberFormat("es-DO", {
       maximumFractionDigits: 12
@@ -908,6 +1204,8 @@
       cantidad: document.querySelector("#amount-input"),
       cripto: document.querySelector("#crypto-select"),
       resultado: document.querySelector("#result-value"),
+      botonCopiar: document.querySelector("#copy-result"),
+      estadoCopiar: document.querySelector("#copy-status"),
       textoResultado: document.querySelector("#result-subline"),
       rotuloResultado: document.querySelector("#result-caption"),
       unidadResultado: document.querySelector("#result-unit"),
@@ -916,6 +1214,7 @@
       precioUnidad: document.querySelector("#unit-price"),
       ticker: document.querySelector("#selected-ticker"),
       actualizado: document.querySelector("#updated-at"),
+      tiempoActualizado: document.querySelector("#elapsed-update"),
       estado: document.querySelector("#status-message"),
       botonActualizar: document.querySelector("#refresh-button"),
       listaHistorial: document.querySelector("#history-list"),
@@ -941,6 +1240,7 @@
     let historialGrafico = [];
     let solicitudGrafico = 0;
     let graficoPrecio = null;
+    let textoResultadoCopiar = "";
 
     // Formatea un valor numérico según el tipo de moneda que se muestra.
     function formatear(valor, tipo = "numero") {
@@ -1017,7 +1317,7 @@
       }
 
       if (esAproximado) {
-        elementos.estado.textContent = "precio aproximado, sin conexión";
+        elementos.estado.textContent = "Usando precios de respaldo, pueden estar desactualizados.";
         elementos.estado.classList.add("is-warning");
       } else {
         elementos.estado.textContent = "Precios actualizados desde las fuentes de mercado.";
@@ -1213,6 +1513,10 @@
           : `Introduce una cantidad de ${datosCripto.ticker} para calcular.`;
       }
 
+      textoResultadoCopiar = direccionInversa
+        ? `${formatear(cantidad, "pesos")} = ${elementos.resultado.textContent}`
+        : `${formatear(cantidad, "cripto")} ${datosCripto.ticker} = ${elementos.resultado.textContent}`;
+
       if (guardar && cantidad > 0 && ultimaActualizacion) {
         guardarHistorial({
           id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -1231,6 +1535,21 @@
       convertir();
     }
 
+    // Recupera la interfaz con valores de respaldo si ocurre un error inesperado al actualizar.
+    function mostrarErrorPrecios(error) {
+      console.error("No se pudieron completar las consultas de precios.", error);
+      precios = Object.fromEntries(
+        Object.entries(criptomonedas).map(([id, datos]) => [id, datos.precioUsdRespaldo])
+      );
+      tasaDop = TASA_DOP_RESPALDO;
+      esAproximado = true;
+      actualizarInterfaz();
+      elementos.estado.textContent = "Usando precios de respaldo, pueden estar desactualizados.";
+      elementos.estado.classList.add("is-warning");
+      elementos.botonActualizar.disabled = false;
+      elementos.botonActualizar.classList.remove("is-loading");
+    }
+
     function actualizarHora() {
       if (!ultimaActualizacion) return;
       elementos.actualizado.dateTime = ultimaActualizacion.toISOString();
@@ -1238,6 +1557,45 @@
         hour: "2-digit",
         minute: "2-digit"
       }).format(ultimaActualizacion);
+      actualizarTiempoDesdeActualizacion();
+    }
+
+    // Muestra en segundos cuánto tiempo ha pasado desde la última consulta de precios.
+    function actualizarTiempoDesdeActualizacion() {
+      const segundos = ultimaActualizacion
+        ? Math.floor((Date.now() - ultimaActualizacion.getTime()) / 1000)
+        : null;
+      elementos.tiempoActualizado.textContent = segundos === null
+        ? "Actualizado hace — segundos"
+        : `Actualizado hace ${segundos} segundos`;
+    }
+
+    // Copia el resultado calculado y conserva una alternativa para contextos sin Clipboard API.
+    async function copiarResultado() {
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(textoResultadoCopiar);
+        } else {
+          const campoTemporal = document.createElement("textarea");
+          campoTemporal.value = textoResultadoCopiar;
+          campoTemporal.setAttribute("readonly", "");
+          campoTemporal.style.position = "fixed";
+          campoTemporal.style.opacity = "0";
+          document.body.append(campoTemporal);
+          try {
+            campoTemporal.select();
+            if (!document.execCommand("copy")) {
+              throw new Error("El navegador no permitió copiar el resultado.");
+            }
+          } finally {
+            campoTemporal.remove();
+          }
+        }
+        elementos.estadoCopiar.textContent = "¡Copiado!";
+      } catch (error) {
+        console.error("No se pudo copiar el resultado.", error);
+        elementos.estadoCopiar.textContent = "No se pudo copiar el resultado.";
+      }
     }
 
     // Lee y valida el historial del navegador para no depender de datos corruptos.
@@ -1400,19 +1758,19 @@
 
     document.querySelector("#swap-button").addEventListener("click", intercambiarDireccion);
     elementos.botonActualizar.addEventListener("click", obtenerPrecios);
+    elementos.botonCopiar.addEventListener("click", copiarResultado);
 
     renderizarHistorial();
     iniciarEfectoTyping();
     convertir();
     actualizarGrafico();
-    obtenerPrecios().catch((error) => {
-      // Los errores inesperados quedan visibles; las fuentes con error ya usan respaldo.
-      console.error("No se pudieron completar las consultas de precios.", error);
-      elementos.estado.textContent = "No se pudieron consultar los precios. Se mantienen los valores aproximados.";
-      elementos.estado.classList.add("is-warning");
-      elementos.botonActualizar.disabled = false;
-      elementos.botonActualizar.classList.remove("is-loading");
-    });
+    actualizarTiempoDesdeActualizacion();
+    obtenerPrecios().catch(mostrarErrorPrecios);
+    window.setInterval(actualizarTiempoDesdeActualizacion, 1000);
+    window.setInterval(() => {
+      obtenerPrecios().catch(mostrarErrorPrecios);
+    }, INTERVALO_ACTUALIZACION);
   </script>
 </body>
 </html>
+
