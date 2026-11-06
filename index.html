@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10141a">
+  <meta name="description" content="Convierte Bitcoin, Ethereum, Solana y otras criptomonedas a pesos dominicanos con el conversor de Fabio.">
+  <title>Conversor Crypto de Fabio</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #10141a;
+      --panel: #181c22;
+      --panel-raised: #1c2026;
+      --panel-hover: #262a31;
+      --line: #30363e;
+      --text: #e7e9ef;
+      --muted: #9aa5a0;
+      --teal: #00e3c2;
+      --teal-soft: rgba(0, 227, 194, .12);
+      --pink: #ff5ca8;
+      --pink-soft: rgba(255, 92, 168, .13);
+      --warning: #ffd58a;
+      --font-ui: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+      --font-code: "JetBrains Mono", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 50% -18%, rgba(255, 92, 168, .12), transparent 40rem),
+        radial-gradient(ellipse at 100% 48%, rgba(0, 227, 194, .06), transparent 30rem),
+        var(--bg);
+      font-family: var(--font-ui);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; }
+
+    .page-shell {
+      width: min(100% - 40px, 1080px);
+      margin-inline: auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 76px;
+      border-bottom: 1px solid rgba(255, 255, 255, .055);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-code);
+      font-size: .86rem;
+      font-weight: 700;
+      letter-spacing: -.04em;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 1px solid rgba(255, 92, 168, .4);
+      border-radius: 11px;
+      color: var(--pink);
+      background: var(--pink-soft);
+      font-size: 1rem;
+    }
+
+    .brand span:last-child { color: var(--muted); font-weight: 500; }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border: 1px solid rgba(0, 227, 194, .19);
+      border-radius: 999px;
+      color: #a7e9de;
+      background: rgba(0, 227, 194, .06);
+      font-family: var(--font-code);
+      font-size: .65rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 12px rgba(0, 227, 194, .8);
+    }
+
+    .hero {
+      padding: clamp(56px, 9vw, 104px) 0 48px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 20px;
+      color: var(--teal);
+      font-family: var(--font-code);
+      font-size: .72rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before, .eyebrow::after {
+      width: 24px;
+      height: 1px;
+      background: currentColor;
+      content: "";
+      opacity: .7;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      font-weight: 750;
+      letter-spacing: -.075em;
+      line-height: 1.04;
+    }
+
+    .typing-word {
+      display: inline-block;
+      min-width: 4.1em;
+      color: var(--pink);
+      text-align: left;
+      text-shadow: 0 0 35px rgba(255, 92, 168, .18);
+    }
+
+    .typing-word::after {
+      display: inline-block;
+      width: 2px;
+      height: .78em;
+      margin-left: .1em;
+      background: var(--teal);
+      content: "";
+      vertical-align: -.02em;
+      animation: blink .8s steps(2, start) infinite;
+    }
+
+    .hero-copy {
+      max-width: 560px;
+      margin: 20px auto 0;
+      color: var(--muted);
+      font-size: clamp(.95rem, 2vw, 1.08rem);
+      line-height: 1.7;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 24px;
+    }
+
+    .meta-chip {
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, .075);
+      border-radius: 8px;
+      color: #b7c0bb;
+      background: rgba(24, 28, 34, .68);
+      font-family: var(--font-code);
+      font-size: .68rem;
+    }
+
+    .meta-chip strong { color: var(--teal); font-weight: 500; }
+
+    .converter-card {
+      position: relative;
+      width: min(100%, 780px);
+      margin: 0 auto;
+      padding: clamp(20px, 4vw, 36px);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .09);
+      border-radius: 22px;
+      background: linear-gradient(145deg, rgba(28, 32, 38, .98), rgba(20, 24, 30, .98));
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .28), 0 1px 0 rgba(255, 255, 255, .025) inset;
+    }
+
+    .converter-card::before {
+      position: absolute;
+      top: 0;
+      left: 10%;
+      width: 80%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 92, 168, .62), transparent);
+      content: "";
+    }
+
+    .card-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 27px;
+    }
+
+    .card-heading h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: -.035em;
+    }
+
+    .card-heading p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .direction-label {
+      flex: 0 0 auto;
+      padding: 7px 9px;
+      border: 1px solid rgba(255, 92, 168, .2);
+      border-radius: 8px;
+      color: #ff9ac8;
+      background: var(--pink-soft);
+      font-family: var(--font-code);
+      font-size: .64rem;
+      letter-spacing: .04em;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 10px;
+      color: #c1c9c4;
+      font-size: .76rem;
+      font-weight: 650;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 190px;
+      gap: 10px;
+    }
+
+    .amount-input, .crypto-select {
+      width: 100%;
+      min-height: 60px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      outline: none;
+      color: var(--text);
+      background: #11151b;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+
+    .amount-input {
+      padding: 0 17px;
+      font-family: var(--font-code);
+      font-size: 1.16rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .crypto-select {
+      padding: 0 38px 0 14px;
+      cursor: pointer;
+      font-size: .88rem;
+      font-weight: 650;
+    }
+
+    .amount-input:focus, .crypto-select:focus {
+      border-color: rgba(0, 227, 194, .72);
+      background: #131a1f;
+      box-shadow: 0 0 0 3px rgba(0, 227, 194, .09);
+    }
+
+    .quick-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .quick-label {
+      margin-right: 3px;
+      color: #7f8a84;
+      font-family: var(--font-code);
+      font-size: .67rem;
+    }
+
+    .quick-button {
+      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, .09);
+      border-radius: 7px;
+      color: #c4ccc7;
+      background: rgba(255, 255, 255, .025);
+      cursor: pointer;
+      font-family: var(--font-code);
+      font-size: .7rem;
+      transition: border-color .18s, color .18s, background .18s, transform .18s;
+    }
+
+    .quick-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 92, 168, .4);
+      color: #ff9ac8;
+      background: var(--pink-soft);
+    }
+
+    .swap-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 72px;
+    }
+
+    .swap-row::before {
+      position: absolute;
+      right: 0;
+      left: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, .065);
+      content: "";
+    }
+
+    .swap-button {
+      z-index: 1;
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border: 1px solid rgba(0, 227, 194, .28);
+      border-radius: 13px;
+      color: var(--teal);
+      background: #1b2428;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: transform .24s, background .2s, box-shadow .2s;
+    }
+
+    .swap-button:hover {
+      transform: rotate(180deg);
+      background: #203237;
+      box-shadow: 0 0 22px rgba(0, 227, 194, .12);
+    }
+
+    .result-panel {
+      padding: 19px 20px 20px;
+      border: 1px solid rgba(0, 227, 194, .17);
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(0, 227, 194, .07), rgba(0, 227, 194, .018));
+    }
+
+    .result-caption {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #9eaca5;
+      font-size: .74rem;
+    }
+
+    .result-caption span:last-child {
+      color: var(--teal);
+      font-family: var(--font-code);
+      font-size: .66rem;
+    }
+
+    .result-value {
+      display: block;
+      margin-top: 8px;
+      overflow-wrap: anywhere;
+      color: #f0f5f2;
+      font-family: var(--font-code);
+      font-size: clamp(1.75rem, 6vw, 3.2rem);
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      letter-spacing: -.065em;
+      line-height: 1.18;
+    }
+
+    .result-subline {
+      min-height: 18px;
+      margin: 8px 0 0;
+      color: #8d9993;
+      font-size: .76rem;
+    }
+
+    .price-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .price-info {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px 10px;
+      color: #97a39d;
+      font-size: .74rem;
+    }
+
+    .price-info strong {
+      color: #e7ece9;
+      font-family: var(--font-code);
+      font-size: .8rem;
+      font-weight: 500;
+    }
+
+    .price-divider { color: #48534e; }
+
+    .refresh-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border: 1px solid rgba(255, 255, 255, .105);
+      border-radius: 9px;
+      color: #d3dad6;
+      background: rgba(255, 255, 255, .035);
+      cursor: pointer;
+      font-size: .72rem;
+      font-weight: 650;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+
+    .refresh-button:hover:not(:disabled) {
+      border-color: rgba(0, 227, 194, .35);
+      color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .refresh-button:disabled { cursor: wait; opacity: .6; }
+    .refresh-icon { font-size: .95rem; }
+    .refresh-button.is-loading .refresh-icon { animation: spin .8s linear infinite; }
+
+    .status-message {
+      min-height: 20px;
+      margin: 13px 0 0;
+      color: #829089;
+      font-size: .72rem;
+      line-height: 1.5;
+    }
+
+    .status-message.is-warning { color: var(--warning); }
+    .status-message.is-error { color: #ff9b9b; }
+
+    .chart-section {
+      width: min(100%, 780px);
+      margin: 28px auto 0;
+      padding: clamp(18px, 3.5vw, 28px);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(28, 32, 38, .94), rgba(20, 24, 30, .96));
+    }
+
+    .chart-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .chart-heading h2 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: -.03em;
+    }
+
+    .chart-heading p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: .76rem;
+    }
+
+    .chart-ranges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chart-range-button {
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, .09);
+      border-radius: 7px;
+      color: #aeb8b2;
+      background: rgba(255, 255, 255, .025);
+      cursor: pointer;
+      font-family: var(--font-code);
+      font-size: .68rem;
+      transition: border-color .18s, color .18s, background .18s;
+    }
+
+    .chart-range-button:hover,
+    .chart-range-button.is-active {
+      border-color: rgba(0, 227, 194, .35);
+      color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .chart-range-button:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 3px;
+    }
+
+    .chart-canvas-wrap {
+      position: relative;
+      height: clamp(220px, 42vw, 320px);
+    }
+
+    .chart-status {
+      min-height: 20px;
+      margin: 12px 0 0;
+      color: #829089;
+      font-size: .73rem;
+    }
+
+    .chart-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .chart-stat {
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .02);
+    }
+
+    .chart-stat-label {
+      display: block;
+      color: #87938d;
+      font-size: .68rem;
+    }
+
+    .chart-stat-value {
+      display: block;
+      margin-top: 6px;
+      overflow-wrap: anywhere;
+      color: #e7ece9;
+      font-family: var(--font-code);
+      font-size: .82rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chart-stat-value.is-positive { color: #55dda9; }
+    .chart-stat-value.is-negative { color: #ff777f; }
+
+    .history-section {
+      width: min(100%, 780px);
+      margin: 44px auto 0;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: -.03em;
+    }
+
+    .section-heading p {
+      margin: 5px 0 0;
+      color: #818d87;
+      font-size: .73rem;
+    }
+
+    .history-count {
+      color: #8d9993;
+      font-family: var(--font-code);
+      font-size: .68rem;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .history-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 15px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: 11px;
+      background: rgba(24, 28, 34, .62);
+      animation: rise-in .25s ease both;
+    }
+
+    .history-conversion {
+      min-width: 0;
+      overflow: hidden;
+      color: #e0e6e2;
+      font-family: var(--font-code);
+      font-size: .77rem;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .history-arrow { padding: 0 5px; color: var(--teal); }
+
+    .history-details {
+      margin-top: 5px;
+      color: #7f8b85;
+      font-family: var(--font-ui);
+      font-size: .67rem;
+    }
+
+    .history-value {
+      color: #a9f3e7;
+      font-family: var(--font-code);
+      font-size: .82rem;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .empty-history {
+      padding: 24px 16px;
+      border: 1px dashed rgba(255, 255, 255, .1);
+      border-radius: 11px;
+      color: #818d87;
+      font-size: .78rem;
+      text-align: center;
+    }
+
+    .footnote {
+      width: min(100%, 780px);
+      margin: 27px auto 0;
+      padding-bottom: 40px;
+      color: #77827d;
+      font-size: .69rem;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .footnote a {
+      color: #a0b2aa;
+      text-decoration-color: rgba(160, 178, 170, .35);
+      text-underline-offset: 3px;
+    }
+
+    button:focus-visible, a:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 3px;
+    }
+
+    @keyframes blink { to { visibility: hidden; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes rise-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 600px) {
+      .page-shell { width: min(100% - 28px, 1080px); }
+      .topbar { min-height: 64px; }
+      .live-badge { padding: 7px 9px; font-size: .57rem; }
+      .hero { padding: 58px 0 34px; }
+      .eyebrow { font-size: .63rem; }
+      h1 { font-size: clamp(2.35rem, 11vw, 3.55rem); }
+      .hero-copy { max-width: 340px; margin-top: 15px; }
+      .hero-meta { margin-top: 18px; }
+      .converter-card { border-radius: 17px; }
+      .card-heading { margin-bottom: 22px; }
+      .input-row { grid-template-columns: minmax(0, 1fr) 142px; gap: 8px; }
+      .amount-input, .crypto-select { min-height: 55px; }
+      .amount-input { padding-inline: 12px; font-size: 1rem; }
+      .crypto-select { padding-right: 26px; padding-left: 10px; font-size: .78rem; }
+      .swap-row { min-height: 62px; }
+      .result-panel { padding: 16px; }
+      .price-footer { align-items: flex-start; }
+      .price-info { max-width: 100%; }
+      .refresh-button { margin-left: auto; }
+      .chart-stats { gap: 7px; }
+      .chart-stat { padding: 10px 8px; }
+      .chart-stat-value { font-size: .72rem; }
+      .history-section { margin-top: 36px; }
+    }
+
+    @media (max-width: 380px) {
+      .brand { gap: 7px; font-size: .76rem; }
+      .brand-mark { width: 30px; height: 30px; }
+      .live-badge { gap: 6px; font-size: .51rem; }
+      .input-row { grid-template-columns: minmax(0, 1fr) 126px; }
+      .crypto-select { font-size: .72rem; }
+      .chart-heading { align-items: flex-start; }
+      .chart-stats { grid-template-columns: 1fr; }
+      .history-item { padding: 12px; }
+      .history-value { font-size: .73rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar page-shell">
+    <a class="brand" href="#" aria-label="Conversor Crypto de Fabio, inicio">
+      <span class="brand-mark" aria-hidden="true">F.</span>
+      <span>Fabio</span><span>// crypto</span>
+    </a>
+    <div class="live-badge" aria-label="Precios consultados en vivo">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span>Mercado en vivo</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">Tu conversor personal</p>
+      <h1 id="page-title">Conversor Crypto<br>de Fabio <span class="typing-word" id="typing-word" aria-label="Bitcoin">Bitcoin</span></h1>
+      <p class="hero-copy">Convierte tus criptos a pesos dominicanos al instante.</p>
+      <div class="hero-meta" aria-label="Mercados disponibles">
+        <span class="meta-chip"><strong>06</strong> criptomonedas</span>
+        <span class="meta-chip">USD <strong>→</strong> DOP</span>
+        <span class="meta-chip">RD$ peso dominicano</span>
+      </div>
+    </section>
+
+    <section class="converter-card" aria-labelledby="converter-title">
+      <div class="card-heading">
+        <div>
+          <h2 id="converter-title">Calculadora de conversión</h2>
+          <p>Elige una moneda y calcula al instante.</p>
+        </div>
+        <span class="direction-label" id="direction-label">CRIPTO → RD$</span>
+      </div>
+
+      <label class="field-label" id="amount-label" for="amount-input">Cantidad en cripto</label>
+      <div class="input-row">
+        <input
+          class="amount-input"
+          id="amount-input"
+          type="number"
+          min="0"
+          step="any"
+          inputmode="decimal"
+          value="0.01"
+          placeholder="Ej. 0.01"
+          aria-describedby="input-help"
+        >
+        <select class="crypto-select" id="crypto-select" aria-label="Selecciona una criptomoneda">
+          <option value="bitcoin">₿ Bitcoin (BTC)</option>
+          <option value="ethereum">◆ Ethereum (ETH)</option>
+          <option value="tether">₮ Tether (USDT)</option>
+          <option value="solana">◎ Solana (SOL)</option>
+          <option value="dogecoin">Ð Dogecoin (DOGE)</option>
+          <option value="ripple">✕ XRP (XRP)</option>
+        </select>
+      </div>
+
+      <div class="quick-row" id="quick-row" aria-label="Cantidades rápidas">
+        <span class="quick-label">RÁPIDO</span>
+        <button class="quick-button" type="button" data-amount="0.001">0.001</button>
+        <button class="quick-button" type="button" data-amount="0.01">0.01</button>
+        <button class="quick-button" type="button" data-amount="0.1">0.1</button>
+        <button class="quick-button" type="button" data-amount="1">1</button>
+      </div>
+      <p id="input-help" hidden>Ingresa una cantidad mayor que cero.</p>
+
+      <div class="swap-row">
+        <button class="swap-button" id="swap-button" type="button" aria-label="Intercambiar dirección de conversión" title="Intercambiar dirección">
+          <span aria-hidden="true">↕</span>
+        </button>
+      </div>
+
+      <div class="result-panel" aria-live="polite" aria-atomic="true">
+        <div class="result-caption">
+          <span id="result-caption">Recibirás aproximadamente</span>
+          <span id="result-unit">DOP</span>
+        </div>
+        <output class="result-value" id="result-value" for="amount-input">RD$ —</output>
+        <p class="result-subline" id="result-subline">Cargando precios de mercado…</p>
+      </div>
+
+      <div class="price-footer">
+        <div class="price-info">
+          <span>1 <span id="selected-ticker">BTC</span> equivale a</span>
+          <strong id="unit-price">RD$ —</strong>
+          <span class="price-divider" aria-hidden="true">·</span>
+          <span>Actualizado <time id="updated-at">—</time></span>
+        </div>
+        <button class="refresh-button" id="refresh-button" type="button">
+          <span class="refresh-icon" aria-hidden="true">↻</span>
+          <span>Actualizar precio</span>
+        </button>
+      </div>
+      <p class="status-message" id="status-message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="chart-section" aria-labelledby="chart-title">
+      <div class="chart-heading">
+        <div>
+          <h2 id="chart-title">Precio últimos 7 días</h2>
+          <p id="chart-crypto-name">Bitcoin (BTC)</p>
+        </div>
+        <div class="chart-ranges" role="group" aria-label="Rango del gráfico">
+          <button class="chart-range-button" type="button" data-days="1" aria-pressed="false">24h</button>
+          <button class="chart-range-button is-active" type="button" data-days="7" aria-pressed="true">7 días</button>
+          <button class="chart-range-button" type="button" data-days="30" aria-pressed="false">30 días</button>
+        </div>
+      </div>
+      <div class="chart-canvas-wrap">
+        <canvas id="price-chart" role="img" aria-label="Historial de precios en pesos dominicanos"></canvas>
+      </div>
+      <p class="chart-status" id="chart-status" role="status" aria-live="polite">Cargando gráfico...</p>
+      <div class="chart-stats" aria-label="Estadísticas del período">
+        <div class="chart-stat">
+          <span class="chart-stat-label">Precio mínimo</span>
+          <strong class="chart-stat-value" id="chart-min">—</strong>
+        </div>
+        <div class="chart-stat">
+          <span class="chart-stat-label">Precio máximo</span>
+          <strong class="chart-stat-value" id="chart-max">—</strong>
+        </div>
+        <div class="chart-stat">
+          <span class="chart-stat-label">Cambio total</span>
+          <strong class="chart-stat-value" id="chart-change">—</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="history-section" aria-labelledby="history-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="history-title">Historial reciente</h2>
+          <p>Tus últimas conversiones, guardadas en este dispositivo.</p>
+        </div>
+        <span class="history-count" id="history-count">0 / 5</span>
+      </div>
+      <ul class="history-list" id="history-list" aria-live="polite"></ul>
+    </section>
+
+    <p class="footnote">
+      Precios de referencia consultados en
+      <a href="https://www.coingecko.com/" target="_blank" rel="noopener noreferrer">CoinGecko</a>
+      y tipo de cambio de
+      <a href="https://open.er-api.com/" target="_blank" rel="noopener noreferrer">ExchangeRate-API</a>.
+      Las cotizaciones pueden variar y no representan asesoría financiera.
+    </p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    "use strict";
+
+    // Configuración de monedas, identificadores y tasas de respaldo aproximadas.
+    const criptomonedas = {
+      bitcoin: { ticker: "BTC", nombre: "Bitcoin", precioUsdRespaldo: 68000 },
+      ethereum: { ticker: "ETH", nombre: "Ethereum", precioUsdRespaldo: 3500 },
+      tether: { ticker: "USDT", nombre: "Tether", precioUsdRespaldo: 1 },
+      solana: { ticker: "SOL", nombre: "Solana", precioUsdRespaldo: 150 },
+      dogecoin: { ticker: "DOGE", nombre: "Dogecoin", precioUsdRespaldo: 0.16 },
+      ripple: { ticker: "XRP", nombre: "XRP", precioUsdRespaldo: 0.52 }
+    };
+
+    const CLAVE_HISTORIAL = "fabio-conversor-crypto-historial-v1";
+    const MAX_HISTORIAL = 5;
+    const TASA_DOP_RESPALDO = 59;
+    const API_CRYPTO = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,solana,dogecoin,ripple&vs_currencies=usd";
+    const API_CAMBIO = "https://open.er-api.com/v6/latest/USD";
+    const formateadorNumero = new Intl.NumberFormat("es-DO", {
+      maximumFractionDigits: 12
+    });
+    const formateadorPesos = new Intl.NumberFormat("es-DO", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    const elementos = {
+      cantidad: document.querySelector("#amount-input"),
+      cripto: document.querySelector("#crypto-select"),
+      resultado: document.querySelector("#result-value"),
+      textoResultado: document.querySelector("#result-subline"),
+      rotuloResultado: document.querySelector("#result-caption"),
+      unidadResultado: document.querySelector("#result-unit"),
+      direccion: document.querySelector("#direction-label"),
+      rotuloCantidad: document.querySelector("#amount-label"),
+      precioUnidad: document.querySelector("#unit-price"),
+      ticker: document.querySelector("#selected-ticker"),
+      actualizado: document.querySelector("#updated-at"),
+      estado: document.querySelector("#status-message"),
+      botonActualizar: document.querySelector("#refresh-button"),
+      listaHistorial: document.querySelector("#history-list"),
+      contadorHistorial: document.querySelector("#history-count"),
+      filaRapidos: document.querySelector("#quick-row"),
+      tituloGrafico: document.querySelector("#chart-title"),
+      nombreGrafico: document.querySelector("#chart-crypto-name"),
+      estadoGrafico: document.querySelector("#chart-status"),
+      lienzoGrafico: document.querySelector("#price-chart"),
+      minimoGrafico: document.querySelector("#chart-min"),
+      maximoGrafico: document.querySelector("#chart-max"),
+      cambioGrafico: document.querySelector("#chart-change")
+    };
+
+    let precios = {};
+    let tasaDop = TASA_DOP_RESPALDO;
+    let esAproximado = true;
+    let direccionInversa = false;
+    let ultimaActualizacion = null;
+    let temporizadorHistorial = null;
+    let historial = cargarHistorial();
+    let diasGrafico = 7;
+    let historialGrafico = [];
+    let solicitudGrafico = 0;
+    let graficoPrecio = null;
+
+    // Formatea un valor numérico según el tipo de moneda que se muestra.
+    function formatear(valor, tipo = "numero") {
+      if (!Number.isFinite(valor)) return "—";
+      if (tipo === "pesos") return `RD$ ${formateadorPesos.format(valor)}`;
+      if (tipo === "cripto") return formateadorNumero.format(valor);
+      return formateadorNumero.format(valor);
+    }
+
+    function obtenerCantidad() {
+      const cantidad = Number(elementos.cantidad.value);
+      return Number.isFinite(cantidad) && cantidad > 0 ? cantidad : 0;
+    }
+
+    function obtenerPrecioCriptoUsd(id) {
+      return precios[id] ?? criptomonedas[id].precioUsdRespaldo;
+    }
+
+    // Consulta ambas fuentes en paralelo y aplica respaldo solo a la fuente que falle.
+    async function obtenerPrecios() {
+      elementos.botonActualizar.disabled = true;
+      elementos.botonActualizar.classList.add("is-loading");
+      elementos.estado.textContent = "Consultando precios actuales…";
+      elementos.estado.classList.remove("is-warning", "is-error");
+
+      const resultados = await Promise.allSettled([
+        obtenerJson(API_CRYPTO),
+        obtenerJson(API_CAMBIO)
+      ]);
+
+      let falloCrypto = false;
+      let falloCambio = false;
+
+      if (resultados[0].status === "fulfilled") {
+        const datosCrypto = resultados[0].value;
+        const nuevosPrecios = {};
+        for (const id of Object.keys(criptomonedas)) {
+          const precio = datosCrypto[id]?.usd;
+          if (Number.isFinite(precio) && precio > 0) {
+            nuevosPrecios[id] = precio;
+          } else {
+            nuevosPrecios[id] = criptomonedas[id].precioUsdRespaldo;
+            falloCrypto = true;
+          }
+        }
+        precios = nuevosPrecios;
+      } else {
+        falloCrypto = true;
+        precios = Object.fromEntries(
+          Object.entries(criptomonedas).map(([id, datos]) => [id, datos.precioUsdRespaldo])
+        );
+      }
+
+      if (resultados[1].status === "fulfilled") {
+        const cambio = resultados[1].value;
+        const tasa = cambio?.rates?.DOP;
+        if (cambio?.result === "success" && Number.isFinite(tasa) && tasa > 0) {
+          tasaDop = tasa;
+        } else {
+          falloCambio = true;
+          tasaDop = TASA_DOP_RESPALDO;
+        }
+      } else {
+        falloCambio = true;
+        tasaDop = TASA_DOP_RESPALDO;
+      }
+
+      esAproximado = falloCrypto || falloCambio;
+      ultimaActualizacion = new Date();
+      actualizarHora();
+      actualizarInterfaz();
+      if (historialGrafico.length > 0 && typeof Chart !== "undefined") {
+        dibujarGrafico(historialGrafico);
+      }
+
+      if (esAproximado) {
+        elementos.estado.textContent = "precio aproximado, sin conexión";
+        elementos.estado.classList.add("is-warning");
+      } else {
+        elementos.estado.textContent = "Precios actualizados desde las fuentes de mercado.";
+      }
+
+      elementos.botonActualizar.disabled = false;
+      elementos.botonActualizar.classList.remove("is-loading");
+    }
+
+    async function obtenerJson(url) {
+      const controlador = new AbortController();
+      const temporizador = window.setTimeout(() => controlador.abort(), 10000);
+      try {
+        const respuesta = await fetch(url, {
+          method: "GET",
+          headers: { Accept: "application/json" },
+          signal: controlador.signal,
+          cache: "no-store"
+        });
+        if (!respuesta.ok) {
+          throw new Error(`La solicitud falló con estado ${respuesta.status}.`);
+        }
+        return await respuesta.json();
+      } finally {
+        window.clearTimeout(temporizador);
+      }
+    }
+
+    // Obtiene el historial de precios en USD para la cripto y el rango elegidos.
+    async function obtenerHistorial(idCripto, dias) {
+      const datos = await obtenerJson(
+        `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(idCripto)}/market_chart?vs_currency=usd&days=${dias}`
+      );
+      if (!Array.isArray(datos?.prices) || datos.prices.length === 0) {
+        throw new Error("La respuesta del historial no contiene precios.");
+      }
+
+      const preciosValidos = datos.prices
+        .filter((punto) =>
+          Array.isArray(punto) &&
+          Number.isFinite(punto[0]) &&
+          Number.isFinite(punto[1]) &&
+          punto[1] > 0
+        )
+        .map(([fecha, precioUsd]) => ({ fecha, precioUsd }));
+      if (preciosValidos.length === 0) {
+        throw new Error("La respuesta del historial no contiene precios válidos.");
+      }
+      return preciosValidos;
+    }
+
+    // Dibuja el historial en RD$ y actualiza las estadísticas del período.
+    function dibujarGrafico(historialUsd) {
+      if (typeof Chart === "undefined") {
+        throw new Error("No se pudo cargar Chart.js.");
+      }
+
+      const datos = historialUsd.map(({ fecha, precioUsd }) => ({
+        fecha,
+        precioDop: precioUsd * tasaDop
+      }));
+      const valores = datos.map((punto) => punto.precioDop);
+      const minimo = Math.min(...valores);
+      const maximo = Math.max(...valores);
+      const cambio = ((valores[valores.length - 1] - valores[0]) / valores[0]) * 100;
+      const formatoPesosGrafico = (valor) =>
+        `RD$ ${formateadorPesos.format(valor)}`;
+
+      elementos.minimoGrafico.textContent = formatoPesosGrafico(minimo);
+      elementos.maximoGrafico.textContent = formatoPesosGrafico(maximo);
+      elementos.cambioGrafico.textContent = `${cambio > 0 ? "+" : ""}${formateadorPesos.format(cambio)}%`;
+      elementos.cambioGrafico.classList.toggle("is-positive", cambio >= 0);
+      elementos.cambioGrafico.classList.toggle("is-negative", cambio < 0);
+
+      const contexto = elementos.lienzoGrafico.getContext("2d");
+      const degradado = contexto.createLinearGradient(0, 0, 0, elementos.lienzoGrafico.clientHeight);
+      degradado.addColorStop(0, "rgba(0, 227, 194, 0.3)");
+      degradado.addColorStop(1, "rgba(0, 227, 194, 0)");
+      const formatoFecha = new Intl.DateTimeFormat("es-DO", diasGrafico === 1
+        ? { hour: "2-digit", minute: "2-digit" }
+        : { day: "2-digit", month: "short" });
+
+      if (graficoPrecio) graficoPrecio.destroy();
+      graficoPrecio = new Chart(contexto, {
+        type: "line",
+        data: {
+          labels: datos.map((punto) => formatoFecha.format(new Date(punto.fecha))),
+          datasets: [{
+            data: valores,
+            borderColor: "#00e3c2",
+            backgroundColor: degradado,
+            borderWidth: 2,
+            fill: true,
+            tension: 0.35,
+            pointRadius: 0,
+            pointHitRadius: 10
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: "index" },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (contextoTooltip) => formatoPesosGrafico(contextoTooltip.parsed.y)
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: "#87938d", maxTicksLimit: 7, maxRotation: 0 }
+            },
+            y: {
+              grid: { color: "rgba(255, 255, 255, 0.06)" },
+              ticks: {
+                color: "#87938d",
+                callback: (valor) => `RD$ ${formateadorPesos.format(valor)}`
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Actualiza el título y solicita el historial vigente, descartando respuestas obsoletas.
+    async function actualizarGrafico() {
+      const numeroSolicitud = ++solicitudGrafico;
+      const idCripto = elementos.cripto.value;
+      const moneda = criptomonedas[idCripto];
+      elementos.tituloGrafico.textContent = diasGrafico === 1
+        ? "Precio de las últimas 24 horas"
+        : `Precio últimos ${diasGrafico} días`;
+      elementos.nombreGrafico.textContent = `${moneda.nombre} (${moneda.ticker})`;
+      elementos.estadoGrafico.textContent = "Cargando gráfico...";
+      if (graficoPrecio) {
+        graficoPrecio.destroy();
+        graficoPrecio = null;
+      }
+      historialGrafico = [];
+      elementos.minimoGrafico.textContent = "—";
+      elementos.maximoGrafico.textContent = "—";
+      elementos.cambioGrafico.textContent = "—";
+      elementos.cambioGrafico.classList.remove("is-positive", "is-negative");
+
+      try {
+        const historial = await obtenerHistorial(idCripto, diasGrafico);
+        if (numeroSolicitud !== solicitudGrafico) return;
+        historialGrafico = historial;
+        dibujarGrafico(historialGrafico);
+        elementos.estadoGrafico.textContent = "";
+      } catch (error) {
+        if (numeroSolicitud !== solicitudGrafico) return;
+        console.error("No se pudo cargar el historial de precios.", error);
+        elementos.estadoGrafico.textContent = "No se pudo cargar el gráfico, intenta actualizar";
+      }
+    }
+
+    // Convierte en la dirección elegida y actualiza cada dato visible.
+    function convertir(guardar = false) {
+      const cantidad = obtenerCantidad();
+      const idCripto = elementos.cripto.value;
+      const datosCripto = criptomonedas[idCripto];
+      const precioUnitarioDop = obtenerPrecioCriptoUsd(idCripto) * tasaDop;
+
+      elementos.filaRapidos.hidden = direccionInversa;
+      elementos.ticker.textContent = datosCripto.ticker;
+      elementos.precioUnidad.textContent = formatear(precioUnitarioDop, "pesos");
+
+      if (direccionInversa) {
+        elementos.rotuloCantidad.textContent = "Cantidad en pesos dominicanos";
+        elementos.cantidad.placeholder = "Ej. 5000";
+        elementos.direccion.textContent = "RD$ → CRIPTO";
+        elementos.rotuloResultado.textContent = "Recibirás aproximadamente";
+        elementos.unidadResultado.textContent = datosCripto.ticker;
+        elementos.resultado.textContent = cantidad > 0
+          ? `${formatear(cantidad / precioUnitarioDop, "cripto")} ${datosCripto.ticker}`
+          : `0 ${datosCripto.ticker}`;
+        elementos.textoResultado.textContent = cantidad > 0
+          ? `${formatear(cantidad, "pesos")} convertidos a ${datosCripto.nombre}.`
+          : `Introduce un monto en RD$ para calcular ${datosCripto.ticker}.`;
+      } else {
+        elementos.rotuloCantidad.textContent = `Cantidad en ${datosCripto.nombre}`;
+        elementos.cantidad.placeholder = "Ej. 0.01";
+        elementos.direccion.textContent = "CRIPTO → RD$";
+        elementos.rotuloResultado.textContent = "Recibirás aproximadamente";
+        elementos.unidadResultado.textContent = "DOP";
+        elementos.resultado.textContent = formatear(cantidad * precioUnitarioDop, "pesos");
+        elementos.textoResultado.textContent = cantidad > 0
+          ? `${formatear(cantidad, "cripto")} ${datosCripto.ticker} a la tasa actual.`
+          : `Introduce una cantidad de ${datosCripto.ticker} para calcular.`;
+      }
+
+      if (guardar && cantidad > 0 && ultimaActualizacion) {
+        guardarHistorial({
+          id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+          cantidad,
+          ticker: datosCripto.ticker,
+          nombre: datosCripto.nombre,
+          pesos: direccionInversa ? cantidad : cantidad * precioUnitarioDop,
+          cripto: direccionInversa ? cantidad / precioUnitarioDop : cantidad,
+          direccionInversa,
+          fecha: new Date().toISOString()
+        });
+      }
+    }
+
+    function actualizarInterfaz() {
+      convertir();
+    }
+
+    function actualizarHora() {
+      if (!ultimaActualizacion) return;
+      elementos.actualizado.dateTime = ultimaActualizacion.toISOString();
+      elementos.actualizado.textContent = new Intl.DateTimeFormat("es-DO", {
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(ultimaActualizacion);
+    }
+
+    // Lee y valida el historial del navegador para no depender de datos corruptos.
+    function cargarHistorial() {
+      try {
+        const guardado = localStorage.getItem(CLAVE_HISTORIAL);
+        const datos = guardado ? JSON.parse(guardado) : [];
+        return Array.isArray(datos)
+          ? datos.filter((item) =>
+              item &&
+              typeof item.id === "string" &&
+              Number.isFinite(item.cantidad) &&
+              Number.isFinite(item.pesos) &&
+              Number.isFinite(item.cripto) &&
+              typeof item.ticker === "string"
+            ).slice(0, MAX_HISTORIAL)
+          : [];
+      } catch (error) {
+        console.warn("No se pudo leer el historial local.", error);
+        return [];
+      }
+    }
+
+    // Persiste como máximo cinco conversiones y refresca su representación.
+    function guardarHistorial(conversion) {
+      historial = [conversion, ...historial].slice(0, MAX_HISTORIAL);
+      try {
+        localStorage.setItem(CLAVE_HISTORIAL, JSON.stringify(historial));
+      } catch (error) {
+        console.warn("No se pudo guardar el historial en este navegador.", error);
+        elementos.estado.textContent = "La conversión funcionó, pero el historial no pudo guardarse.";
+        elementos.estado.classList.add("is-warning");
+      }
+      renderizarHistorial();
+    }
+
+    function renderizarHistorial() {
+      elementos.contadorHistorial.textContent = `${historial.length} / ${MAX_HISTORIAL}`;
+      elementos.listaHistorial.replaceChildren();
+      if (historial.length === 0) {
+        const vacio = document.createElement("li");
+        vacio.className = "empty-history";
+        vacio.textContent = "Tus conversiones aparecerán aquí.";
+        elementos.listaHistorial.append(vacio);
+        return;
+      }
+
+      for (const item of historial) {
+        const fecha = new Date(item.fecha);
+        const fechaFormateada = Number.isNaN(fecha.getTime())
+          ? "Fecha no disponible"
+          : new Intl.DateTimeFormat("es-DO", {
+              day: "2-digit",
+              month: "short",
+              hour: "2-digit",
+              minute: "2-digit"
+            }).format(fecha);
+        const detalle = item.direccionInversa
+          ? `${formatear(item.pesos, "pesos")} → ${item.ticker}`
+          : `${formatear(item.cripto, "cripto")} ${item.ticker} → RD$`;
+        const fila = document.createElement("li");
+        fila.className = "history-item";
+        const grupo = document.createElement("div");
+        const conversion = document.createElement("div");
+        conversion.className = "history-conversion";
+        conversion.textContent = detalle;
+        const fechaElemento = document.createElement("div");
+        fechaElemento.className = "history-details";
+        fechaElemento.textContent = fechaFormateada;
+        const valor = document.createElement("div");
+        valor.className = "history-value";
+        valor.textContent = item.direccionInversa
+          ? `${formatear(item.cripto, "cripto")} ${item.ticker}`
+          : formatear(item.pesos, "pesos");
+        grupo.append(conversion, fechaElemento);
+        fila.append(grupo, valor);
+        elementos.listaHistorial.append(fila);
+      }
+    }
+
+    function registrarConversionConDemora() {
+      window.clearTimeout(temporizadorHistorial);
+      temporizadorHistorial = window.setTimeout(() => convertir(true), 650);
+    }
+
+    function intercambiarDireccion() {
+      direccionInversa = !direccionInversa;
+      const monto = obtenerCantidad();
+      const precioUnitarioDop = obtenerPrecioCriptoUsd(elementos.cripto.value) * tasaDop;
+      elementos.cantidad.value = monto > 0
+        ? String(direccionInversa ? monto * precioUnitarioDop : monto / precioUnitarioDop)
+        : "";
+      convertir(true);
+    }
+
+    function iniciarEfectoTyping() {
+      const etiqueta = document.querySelector("#typing-word");
+      const palabras = ["Bitcoin", "Ethereum", "Solana"];
+      let indice = 0;
+      let caracter = palabras[indice].length;
+      let borrando = true;
+
+      function escribir() {
+        const palabra = palabras[indice];
+        if (borrando) {
+          caracter -= 1;
+          etiqueta.textContent = palabra.slice(0, caracter);
+          if (caracter <= 0) {
+            borrando = false;
+            indice = (indice + 1) % palabras.length;
+            window.setTimeout(escribir, 350);
+            return;
+          }
+          window.setTimeout(escribir, 55);
+          return;
+        }
+
+        caracter += 1;
+        etiqueta.textContent = palabras[indice].slice(0, caracter);
+        etiqueta.setAttribute("aria-label", palabras[indice]);
+        if (caracter >= palabras[indice].length) {
+          borrando = true;
+          window.setTimeout(escribir, 1700);
+          return;
+        }
+        window.setTimeout(escribir, 95);
+      }
+
+      window.setTimeout(escribir, 1800);
+    }
+
+    elementos.cantidad.addEventListener("input", () => {
+      convertir();
+      registrarConversionConDemora();
+    });
+
+    elementos.cripto.addEventListener("change", () => {
+      convertir(true);
+      actualizarGrafico();
+    });
+
+    document.querySelector(".chart-ranges").addEventListener("click", (evento) => {
+      const boton = evento.target.closest("[data-days]");
+      if (!boton) return;
+      diasGrafico = Number(boton.dataset.days);
+      document.querySelectorAll(".chart-range-button").forEach((botonRango) => {
+        const seleccionado = botonRango === boton;
+        botonRango.classList.toggle("is-active", seleccionado);
+        botonRango.setAttribute("aria-pressed", String(seleccionado));
+      });
+      actualizarGrafico();
+    });
+
+    elementos.filaRapidos.addEventListener("click", (evento) => {
+      const boton = evento.target.closest("[data-amount]");
+      if (!boton) return;
+      elementos.cantidad.value = boton.dataset.amount;
+      convertir(true);
+    });
+
+    document.querySelector("#swap-button").addEventListener("click", intercambiarDireccion);
+    elementos.botonActualizar.addEventListener("click", obtenerPrecios);
+
+    renderizarHistorial();
+    iniciarEfectoTyping();
+    convertir();
+    actualizarGrafico();
+    obtenerPrecios().catch((error) => {
+      // Los errores inesperados quedan visibles; las fuentes con error ya usan respaldo.
+      console.error("No se pudieron completar las consultas de precios.", error);
+      elementos.estado.textContent = "No se pudieron consultar los precios. Se mantienen los valores aproximados.";
+      elementos.estado.classList.add("is-warning");
+      elementos.botonActualizar.disabled = false;
+      elementos.botonActualizar.classList.remove("is-loading");
+    });
+  </script>
+</body>
+</html>
